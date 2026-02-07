@@ -34,12 +34,24 @@ type alias Model =
     , size : BadgeSize
     , orientation : Orientation
     , logo : Maybe String
+    , textY : Float -- 0 to 100 percentage
+    , logoOpacity : Float -- 0 to 1 scaling to css opacity
+    , textBackground : Bool
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { badges = [], size = Standard, orientation = Landscape, logo = Nothing }, Cmd.none )
+    ( { badges = []
+      , size = Standard
+      , orientation = Landscape
+      , logo = Nothing
+      , textY = 50.0 -- Default center
+      , logoOpacity = 0.1 -- Default 10%
+      , textBackground = False
+      }
+    , Cmd.none
+    )
 
 
 
@@ -53,11 +65,31 @@ type Msg
     | RequestPrint
     | SetSize String
     | ToggleOrientation
+    | SetTextY String
+    | SetLogoOpacity String
+    | ToggleTextBackground
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        SetTextY str ->
+            let
+                val =
+                    String.toFloat str |> Maybe.withDefault model.textY
+            in
+            ( { model | textY = val }, Cmd.none )
+
+        SetLogoOpacity str ->
+            let
+                val =
+                    String.toFloat str |> Maybe.withDefault model.logoOpacity
+            in
+            ( { model | logoOpacity = val }, Cmd.none )
+
+        ToggleTextBackground ->
+            ( { model | textBackground = not model.textBackground }, Cmd.none )
+
         ToggleOrientation ->
             let
                 newOrientation =
@@ -178,6 +210,50 @@ view model =
                             )
                         ]
                     ]
+                , div [ class "mb-6 border-t pt-4" ]
+                    [ div [ class "mb-2 font-bold" ] [ text "4. Personnalisation" ]
+                    , div [ class "mb-4" ]
+                        [ div [ class "flex justify-between mb-1" ]
+                            [ text "Position verticale du nom"
+                            , text (String.fromFloat model.textY ++ "%")
+                            ]
+                        , input
+                            [ type_ "range"
+                            , Html.Attributes.min "0"
+                            , Html.Attributes.max "100"
+                            , value (String.fromFloat model.textY)
+                            , onInput SetTextY
+                            , class "w-full"
+                            ]
+                            []
+                        ]
+                    , div [ class "mb-4" ]
+                        [ div [ class "flex justify-between mb-1" ]
+                            [ text "Opacité du logo"
+                            , text (String.fromInt (round (model.logoOpacity * 100)) ++ "%")
+                            ]
+                        , input
+                            [ type_ "range"
+                            , Html.Attributes.min "0"
+                            , Html.Attributes.max "1"
+                            , Html.Attributes.step "0.1"
+                            , value (String.fromFloat model.logoOpacity)
+                            , onInput SetLogoOpacity
+                            , class "w-full"
+                            ]
+                            []
+                        ]
+                    , div [ class "flex items-center gap-2 mb-4" ]
+                        [ input
+                            [ type_ "checkbox"
+                            , Html.Attributes.checked model.textBackground
+                            , onClick ToggleTextBackground
+                            , class "w-4 h-4"
+                            ]
+                            []
+                        , text "Fond blanc sous le nom"
+                        ]
+                    ]
                 , div [ class "flex gap-4" ]
                     [ button
                         [ onClick RequestPrint
@@ -189,7 +265,7 @@ view model =
             ]
         , div
             [ class "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 print:grid-cols-2 print:gap-0 print:w-[210mm] print:mx-auto" ]
-            (List.map (viewBadge model.size model.orientation) model.badges)
+            (List.map (viewBadge model) model.badges)
         ]
 
 
@@ -206,9 +282,15 @@ sizeToString size =
             "A6"
 
 
-viewBadge : BadgeSize -> Orientation -> Badge -> Html Msg
-viewBadge size orientation badge =
+viewBadge : Model -> Badge -> Html Msg
+viewBadge model badge =
     let
+        size =
+            model.size
+
+        orientation =
+            model.orientation
+
         ( w, h ) =
             case size of
                 Standard ->
@@ -227,6 +309,13 @@ viewBadge size orientation badge =
 
                 Portrait ->
                     ( h, w )
+
+        textBgClass =
+            if model.textBackground then
+                "bg-white/95 shadow-md rounded-lg p-3 backdrop-blur-sm"
+
+            else
+                "w-full"
     in
     div
         [ class "relative bg-white border border-gray-300 shadow-md flex flex-col items-center justify-center text-center overflow-hidden break-inside-avoid print:border-none print:shadow-none"
@@ -235,12 +324,18 @@ viewBadge size orientation badge =
         ]
         [ case badge.logo of
             Just src ->
-                div [ class "absolute inset-0 opacity-10 flex items-center justify-center p-4" ]
+                div
+                    [ class "absolute inset-0 flex items-center justify-center p-4"
+                    , Html.Attributes.style "opacity" (String.fromFloat model.logoOpacity)
+                    ]
                     [ Html.img [ Html.Attributes.src src, class "w-full h-full object-contain" ] [] ]
 
             Nothing ->
                 text ""
-        , div [ class "z-10 relative px-4" ]
+        , div
+            [ class ("z-10 relative flex flex-col items-center justify-center " ++ textBgClass)
+            , Html.Attributes.style "top" (String.fromFloat (model.textY - 50) ++ "%")
+            ]
             [ div [ class "font-bold text-2xl mb-1 leading-tight" ] [ text badge.firstName ]
             , div [ class "text-xl text-gray-700 uppercase tracking-widest" ] [ text badge.lastName ]
             ]

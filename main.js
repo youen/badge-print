@@ -5351,7 +5351,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{badges: _List_Nil, logo: $elm$core$Maybe$Nothing, orientation: $author$project$Main$Landscape, size: $author$project$Main$Standard},
+		{badges: _List_Nil, logo: $elm$core$Maybe$Nothing, logoOpacity: 0.1, orientation: $author$project$Main$Landscape, size: $author$project$Main$Standard, textBackground: false, textY: 50.0},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5367,6 +5367,7 @@ var $author$project$Data$Badge$Badge = F3(
 		return {firstName: firstName, lastName: lastName, logo: logo};
 	});
 var $author$project$Data$Badge$create = $author$project$Data$Badge$Badge;
+var $elm$core$Basics$not = _Basics_not;
 var $elm$core$Basics$composeL = F3(
 	function (g, f, x) {
 		return g(
@@ -5384,7 +5385,6 @@ var $elm$core$List$filter = F2(
 			list);
 	});
 var $elm$core$String$lines = _String_lines;
-var $elm$core$Basics$not = _Basics_not;
 var $elm$core$String$words = _String_words;
 var $author$project$Util$Parser$parseLine = function (line) {
 	var parts = $elm$core$String$words(line);
@@ -5422,14 +5422,52 @@ var $author$project$Main$print = _Platform_outgoingPort(
 	function ($) {
 		return $elm$json$Json$Encode$null;
 	});
+var $elm$core$String$toFloat = _String_toFloat;
 var $elm$time$Time$Posix = function (a) {
 	return {$: 'Posix', a: a};
 };
 var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
 var $elm$file$File$toUrl = _File_toUrl;
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
+			case 'SetTextY':
+				var str = msg.a;
+				var val = A2(
+					$elm$core$Maybe$withDefault,
+					model.textY,
+					$elm$core$String$toFloat(str));
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{textY: val}),
+					$elm$core$Platform$Cmd$none);
+			case 'SetLogoOpacity':
+				var str = msg.a;
+				var val = A2(
+					$elm$core$Maybe$withDefault,
+					model.logoOpacity,
+					$elm$core$String$toFloat(str));
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{logoOpacity: val}),
+					$elm$core$Platform$Cmd$none);
+			case 'ToggleTextBackground':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{textBackground: !model.textBackground}),
+					$elm$core$Platform$Cmd$none);
 			case 'ToggleOrientation':
 				var newOrientation = function () {
 					var _v1 = model.orientation;
@@ -5515,10 +5553,17 @@ var $author$project$Main$GotLogo = function (a) {
 	return {$: 'GotLogo', a: a};
 };
 var $author$project$Main$RequestPrint = {$: 'RequestPrint'};
+var $author$project$Main$SetLogoOpacity = function (a) {
+	return {$: 'SetLogoOpacity', a: a};
+};
 var $author$project$Main$SetSize = function (a) {
 	return {$: 'SetSize', a: a};
 };
+var $author$project$Main$SetTextY = function (a) {
+	return {$: 'SetTextY', a: a};
+};
 var $author$project$Main$ToggleOrientation = {$: 'ToggleOrientation'};
+var $author$project$Main$ToggleTextBackground = {$: 'ToggleTextBackground'};
 var $author$project$Main$UpdateNames = function (a) {
 	return {$: 'UpdateNames', a: a};
 };
@@ -5537,11 +5582,23 @@ var $elm$json$Json$Decode$at = F2(
 		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
 	});
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$checked = $elm$html$Html$Attributes$boolProperty('checked');
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$file$File$decoder = _File_decoder;
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$Attributes$max = $elm$html$Html$Attributes$stringProperty('max');
+var $elm$html$Html$Attributes$min = $elm$html$Html$Attributes$stringProperty('min');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5589,6 +5646,7 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 };
 var $elm$html$Html$option = _VirtualDom_node('option');
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $elm$core$Basics$round = _Basics_round;
 var $elm$html$Html$Attributes$rows = function (n) {
 	return A2(
 		_VirtualDom_attribute,
@@ -5605,6 +5663,9 @@ var $author$project$Main$sizeToString = function (size) {
 		default:
 			return 'A6';
 	}
+};
+var $elm$html$Html$Attributes$step = function (n) {
+	return A2($elm$html$Html$Attributes$stringProperty, 'step', n);
 };
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
@@ -5657,8 +5718,11 @@ var $elm$html$Html$Attributes$src = function (url) {
 };
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
-var $author$project$Main$viewBadge = F3(
-	function (size, orientation, badge) {
+var $author$project$Main$viewBadge = F2(
+	function (model, badge) {
+		var textBgClass = model.textBackground ? 'bg-white/95 shadow-md rounded-lg p-3 backdrop-blur-sm' : 'w-full';
+		var size = model.size;
+		var orientation = model.orientation;
 		var _v0 = function () {
 			switch (size.$) {
 				case 'Standard':
@@ -5698,7 +5762,11 @@ var $author$project$Main$viewBadge = F3(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('absolute inset-0 opacity-10 flex items-center justify-center p-4')
+									$elm$html$Html$Attributes$class('absolute inset-0 flex items-center justify-center p-4'),
+									A2(
+									$elm$html$Html$Attributes$style,
+									'opacity',
+									$elm$core$String$fromFloat(model.logoOpacity))
 								]),
 							_List_fromArray(
 								[
@@ -5719,7 +5787,11 @@ var $author$project$Main$viewBadge = F3(
 					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('z-10 relative px-4')
+							$elm$html$Html$Attributes$class('z-10 relative flex flex-col items-center justify-center ' + textBgClass),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'top',
+							$elm$core$String$fromFloat(model.textY - 50) + '%')
 						]),
 					_List_fromArray(
 						[
@@ -5934,6 +6006,115 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
+										$elm$html$Html$Attributes$class('mb-6 border-t pt-4')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('mb-2 font-bold')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('4. Personnalisation')
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('mb-4')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('flex justify-between mb-1')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Position verticale du nom'),
+														$elm$html$Html$text(
+														$elm$core$String$fromFloat(model.textY) + '%')
+													])),
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$type_('range'),
+														$elm$html$Html$Attributes$min('0'),
+														$elm$html$Html$Attributes$max('100'),
+														$elm$html$Html$Attributes$value(
+														$elm$core$String$fromFloat(model.textY)),
+														$elm$html$Html$Events$onInput($author$project$Main$SetTextY),
+														$elm$html$Html$Attributes$class('w-full')
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('mb-4')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('flex justify-between mb-1')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Opacité du logo'),
+														$elm$html$Html$text(
+														$elm$core$String$fromInt(
+															$elm$core$Basics$round(model.logoOpacity * 100)) + '%')
+													])),
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$type_('range'),
+														$elm$html$Html$Attributes$min('0'),
+														$elm$html$Html$Attributes$max('1'),
+														$elm$html$Html$Attributes$step('0.1'),
+														$elm$html$Html$Attributes$value(
+														$elm$core$String$fromFloat(model.logoOpacity)),
+														$elm$html$Html$Events$onInput($author$project$Main$SetLogoOpacity),
+														$elm$html$Html$Attributes$class('w-full')
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('flex items-center gap-2 mb-4')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$type_('checkbox'),
+														$elm$html$Html$Attributes$checked(model.textBackground),
+														$elm$html$Html$Events$onClick($author$project$Main$ToggleTextBackground),
+														$elm$html$Html$Attributes$class('w-4 h-4')
+													]),
+												_List_Nil),
+												$elm$html$Html$text('Fond blanc sous le nom')
+											]))
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
 										$elm$html$Html$Attributes$class('flex gap-4')
 									]),
 								_List_fromArray(
@@ -5960,7 +6141,7 @@ var $author$project$Main$view = function (model) {
 					]),
 				A2(
 					$elm$core$List$map,
-					A2($author$project$Main$viewBadge, model.size, model.orientation),
+					$author$project$Main$viewBadge(model),
 					model.badges))
 			]));
 };
