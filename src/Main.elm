@@ -3,8 +3,8 @@ port module Main exposing (..)
 import Browser
 import Data.Badge as Badge exposing (Badge)
 import File exposing (File)
-import Html exposing (Html, button, div, h1, input, option, select, text, textarea)
-import Html.Attributes exposing (accept, class, placeholder, rows, type_, value)
+import Html exposing (Html, button, div, h1, input, label, option, select, text, textarea)
+import Html.Attributes exposing (accept, checked, class, name, placeholder, rows, type_, value)
 import Html.Events exposing (on, onClick, onInput)
 import Json.Decode as D
 import Task
@@ -37,6 +37,8 @@ type alias Model =
     , textY : Float -- 0 to 100 percentage
     , logoOpacity : Float -- 0 to 1 scaling to css opacity
     , textBackground : Bool
+    , rawInput : String
+    , delimiter : String
     }
 
 
@@ -49,6 +51,8 @@ init _ =
       , textY = 50.0 -- Default center
       , logoOpacity = 0.1 -- Default 10%
       , textBackground = False
+      , rawInput = ""
+      , delimiter = " " -- Default space
       }
     , Cmd.none
     )
@@ -68,6 +72,7 @@ type Msg
     | SetTextY String
     | SetLogoOpacity String
     | ToggleTextBackground
+    | SetDelimiter String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -126,12 +131,24 @@ update msg model =
         UpdateNames input ->
             let
                 parsedNames =
-                    Parser.parseNames input
+                    Parser.parseNames model.delimiter input
 
                 newBadges =
                     List.map (\( first, last ) -> Badge.create first last model.logo) parsedNames
             in
-            ( { model | badges = newBadges }
+            ( { model | badges = newBadges, rawInput = input }
+            , Cmd.none
+            )
+
+        SetDelimiter newDelimiter ->
+            let
+                parsedNames =
+                    Parser.parseNames newDelimiter model.rawInput
+
+                newBadges =
+                    List.map (\( first, last ) -> Badge.create first last model.logo) parsedNames
+            in
+            ( { model | delimiter = newDelimiter, badges = newBadges }
             , Cmd.none
             )
 
@@ -172,11 +189,34 @@ view model =
                     []
                 ]
             , div [ class "mb-6" ]
-                [ textarea
+                [ div [ class "mb-2 font-bold" ] [ text "2. Liste des noms" ]
+                , div [ class "flex gap-4 mb-2 items-center text-sm text-gray-600" ]
+                    [ text "Séparateur :"
+                    , label [ class "flex items-center gap-1 cursor-pointer" ]
+                        [ input [ type_ "radio", name "delimiter", onClick (SetDelimiter " "), checked (model.delimiter == " ") ] []
+                        , text "Espace"
+                        ]
+                    , label [ class "flex items-center gap-1 cursor-pointer" ]
+                        [ input [ type_ "radio", name "delimiter", onClick (SetDelimiter ","), checked (model.delimiter == ",") ] []
+                        , text "Virgule"
+                        ]
+                    , label [ class "flex items-center gap-1 cursor-pointer" ]
+                        [ input [ type_ "radio", name "delimiter", onClick (SetDelimiter ";"), checked (model.delimiter == ";") ] []
+                        , text "Point-virgule"
+                        ]
+                    ]
+                , textarea
                     [ onInput UpdateNames
                     , class "w-full p-2 border rounded"
-                    , placeholder "Collez la liste des noms ici (un par ligne, ex: Prénom Nom)"
+                    , placeholder
+                        (if model.delimiter == " " then
+                            "Collez la liste des noms ici (ex: Prénom Nom)"
+
+                         else
+                            "Collez la liste des noms ici (ex: Prénom, Nom)"
+                        )
                     , rows 5
+                    , value model.rawInput
                     ]
                     []
                 ]
@@ -336,8 +376,8 @@ viewBadge model badge =
             [ class ("z-10 relative flex flex-col items-center justify-center " ++ textBgClass)
             , Html.Attributes.style "top" (String.fromFloat (model.textY - 50) ++ "%")
             ]
-            [ div [ class "font-bold text-2xl mb-1 leading-tight" ] [ text badge.firstName ]
-            , div [ class "text-xl text-gray-700 uppercase tracking-widest" ] [ text badge.lastName ]
+            [ div [ class "font-bold text-2xl leading-tight" ] [ text badge.firstName ]
+            , div [ class "font-bold text-2xl uppercase leading-tight" ] [ text badge.lastName ]
             ]
         , cropMarks
         ]

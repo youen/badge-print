@@ -5351,7 +5351,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{badges: _List_Nil, logo: $elm$core$Maybe$Nothing, logoOpacity: 0.1, orientation: $author$project$Main$Landscape, size: $author$project$Main$Standard, textBackground: false, textY: 50.0},
+		{badges: _List_Nil, delimiter: ' ', logo: $elm$core$Maybe$Nothing, logoOpacity: 0.1, orientation: $author$project$Main$Landscape, rawInput: '', size: $author$project$Main$Standard, textBackground: false, textY: 50.0},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5385,37 +5385,60 @@ var $elm$core$List$filter = F2(
 			list);
 	});
 var $elm$core$String$lines = _String_lines;
-var $elm$core$String$words = _String_words;
-var $author$project$Util$Parser$parseLine = function (line) {
-	var parts = $elm$core$String$words(line);
-	if (!parts.b) {
-		return _Utils_Tuple2('', '');
-	} else {
-		if (!parts.b.b) {
-			var firstName = parts.a;
-			return _Utils_Tuple2(firstName, '');
-		} else {
-			var firstName = parts.a;
-			var rest = parts.b;
-			return _Utils_Tuple2(
-				firstName,
-				A2($elm$core$String$join, ' ', rest));
-		}
-	}
-};
 var $elm$core$String$trim = _String_trim;
-var $author$project$Util$Parser$parseNames = function (input) {
-	return A2(
-		$elm$core$List$map,
-		$author$project$Util$Parser$parseLine,
-		A2(
-			$elm$core$List$filter,
-			A2($elm$core$Basics$composeL, $elm$core$Basics$not, $elm$core$String$isEmpty),
+var $elm$core$String$words = _String_words;
+var $author$project$Util$Parser$parseLine = F2(
+	function (delimiter, line) {
+		if (delimiter === ' ') {
+			var parts = $elm$core$String$words(line);
+			if (!parts.b) {
+				return _Utils_Tuple2('', '');
+			} else {
+				if (!parts.b.b) {
+					var firstName = parts.a;
+					return _Utils_Tuple2(firstName, '');
+				} else {
+					var firstName = parts.a;
+					var rest = parts.b;
+					return _Utils_Tuple2(
+						firstName,
+						A2($elm$core$String$join, ' ', rest));
+				}
+			}
+		} else {
+			var _v1 = A2($elm$core$String$split, delimiter, line);
+			if (!_v1.b) {
+				return _Utils_Tuple2('', '');
+			} else {
+				if (!_v1.b.b) {
+					var firstName = _v1.a;
+					return _Utils_Tuple2(
+						$elm$core$String$trim(firstName),
+						'');
+				} else {
+					var firstName = _v1.a;
+					var rest = _v1.b;
+					return _Utils_Tuple2(
+						$elm$core$String$trim(firstName),
+						$elm$core$String$trim(
+							A2($elm$core$String$join, delimiter, rest)));
+				}
+			}
+		}
+	});
+var $author$project$Util$Parser$parseNames = F2(
+	function (delimiter, input) {
+		return A2(
+			$elm$core$List$map,
+			$author$project$Util$Parser$parseLine(delimiter),
 			A2(
-				$elm$core$List$map,
-				$elm$core$String$trim,
-				$elm$core$String$lines(input))));
-};
+				$elm$core$List$filter,
+				A2($elm$core$Basics$composeL, $elm$core$Basics$not, $elm$core$String$isEmpty),
+				A2(
+					$elm$core$List$map,
+					$elm$core$String$trim,
+					$elm$core$String$lines(input))));
+	});
 var $elm$json$Json$Encode$null = _Json_encodeNull;
 var $author$project$Main$print = _Platform_outgoingPort(
 	'print',
@@ -5507,7 +5530,7 @@ var $author$project$Main$update = F2(
 					$author$project$Main$print(_Utils_Tuple0));
 			case 'UpdateNames':
 				var input = msg.a;
-				var parsedNames = $author$project$Util$Parser$parseNames(input);
+				var parsedNames = A2($author$project$Util$Parser$parseNames, model.delimiter, input);
 				var newBadges = A2(
 					$elm$core$List$map,
 					function (_v3) {
@@ -5519,7 +5542,23 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{badges: newBadges}),
+						{badges: newBadges, rawInput: input}),
+					$elm$core$Platform$Cmd$none);
+			case 'SetDelimiter':
+				var newDelimiter = msg.a;
+				var parsedNames = A2($author$project$Util$Parser$parseNames, newDelimiter, model.rawInput);
+				var newBadges = A2(
+					$elm$core$List$map,
+					function (_v4) {
+						var first = _v4.a;
+						var last = _v4.b;
+						return A3($author$project$Data$Badge$create, first, last, model.logo);
+					},
+					parsedNames);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{badges: newBadges, delimiter: newDelimiter}),
 					$elm$core$Platform$Cmd$none);
 			case 'GotLogo':
 				var file = msg.a;
@@ -5553,6 +5592,9 @@ var $author$project$Main$GotLogo = function (a) {
 	return {$: 'GotLogo', a: a};
 };
 var $author$project$Main$RequestPrint = {$: 'RequestPrint'};
+var $author$project$Main$SetDelimiter = function (a) {
+	return {$: 'SetDelimiter', a: a};
+};
 var $author$project$Main$SetLogoOpacity = function (a) {
 	return {$: 'SetLogoOpacity', a: a};
 };
@@ -5597,8 +5639,10 @@ var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$Attributes$max = $elm$html$Html$Attributes$stringProperty('max');
 var $elm$html$Html$Attributes$min = $elm$html$Html$Attributes$stringProperty('min');
+var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5799,7 +5843,7 @@ var $author$project$Main$viewBadge = F2(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('font-bold text-2xl mb-1 leading-tight')
+									$elm$html$Html$Attributes$class('font-bold text-2xl leading-tight')
 								]),
 							_List_fromArray(
 								[
@@ -5809,7 +5853,7 @@ var $author$project$Main$viewBadge = F2(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('text-xl text-gray-700 uppercase tracking-widest')
+									$elm$html$Html$Attributes$class('font-bold text-2xl uppercase leading-tight')
 								]),
 							_List_fromArray(
 								[
@@ -5893,13 +5937,98 @@ var $author$project$Main$view = function (model) {
 						_List_fromArray(
 							[
 								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('mb-2 font-bold')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('2. Liste des noms')
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('flex gap-4 mb-2 items-center text-sm text-gray-600')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Séparateur :'),
+										A2(
+										$elm$html$Html$label,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('flex items-center gap-1 cursor-pointer')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$type_('radio'),
+														$elm$html$Html$Attributes$name('delimiter'),
+														$elm$html$Html$Events$onClick(
+														$author$project$Main$SetDelimiter(' ')),
+														$elm$html$Html$Attributes$checked(model.delimiter === ' ')
+													]),
+												_List_Nil),
+												$elm$html$Html$text('Espace')
+											])),
+										A2(
+										$elm$html$Html$label,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('flex items-center gap-1 cursor-pointer')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$type_('radio'),
+														$elm$html$Html$Attributes$name('delimiter'),
+														$elm$html$Html$Events$onClick(
+														$author$project$Main$SetDelimiter(',')),
+														$elm$html$Html$Attributes$checked(model.delimiter === ',')
+													]),
+												_List_Nil),
+												$elm$html$Html$text('Virgule')
+											])),
+										A2(
+										$elm$html$Html$label,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('flex items-center gap-1 cursor-pointer')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$type_('radio'),
+														$elm$html$Html$Attributes$name('delimiter'),
+														$elm$html$Html$Events$onClick(
+														$author$project$Main$SetDelimiter(';')),
+														$elm$html$Html$Attributes$checked(model.delimiter === ';')
+													]),
+												_List_Nil),
+												$elm$html$Html$text('Point-virgule')
+											]))
+									])),
+								A2(
 								$elm$html$Html$textarea,
 								_List_fromArray(
 									[
 										$elm$html$Html$Events$onInput($author$project$Main$UpdateNames),
 										$elm$html$Html$Attributes$class('w-full p-2 border rounded'),
-										$elm$html$Html$Attributes$placeholder('Collez la liste des noms ici (un par ligne, ex: Prénom Nom)'),
-										$elm$html$Html$Attributes$rows(5)
+										$elm$html$Html$Attributes$placeholder(
+										(model.delimiter === ' ') ? 'Collez la liste des noms ici (ex: Prénom Nom)' : 'Collez la liste des noms ici (ex: Prénom, Nom)'),
+										$elm$html$Html$Attributes$rows(5),
+										$elm$html$Html$Attributes$value(model.rawInput)
 									]),
 								_List_Nil)
 							])),

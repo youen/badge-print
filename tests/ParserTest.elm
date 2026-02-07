@@ -25,7 +25,7 @@ suite =
                     -- Plan said: parseNames : String -> List (String, String)
                     -- Let's stick to that for the Utility, then Main maps it to Badges.
                     parsed =
-                        Parser.parseNames input
+                        Parser.parseNames " " input
                 in
                 Expect.equal parsed [ ( "John", "Doe" ) ]
         , test "should parse multiple lines" <|
@@ -34,5 +34,5 @@ suite =
                     input =
                         "John Doe\nJane Smith"
                 in
-                Expect.equal (Parser.parseNames input) [ ( "John", "Doe" ), ( "Jane", "Smith" ) ]
+                Expect.equal (Parser.parseNames " " input) [ ( "John", "Doe" ), ( "Jane", "Smith" ) ]
         ]
