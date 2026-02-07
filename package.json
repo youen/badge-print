@@ -1,0 +1,22 @@
+{
+  "name": "badge-print",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx elm-test",
+    "build:css": "npx tailwindcss -o style.css",
+    "dev": "npx elm-live src/Main.elm --open -- --output=main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "autoprefixer": "^10.4.24",
+    "elm-live": "^4.0.2",
+    "elm-test": "^0.19.1-revision17",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  }
+}
