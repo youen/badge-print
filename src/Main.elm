@@ -33,12 +33,13 @@ type alias Model =
     { badges : List Badge
     , size : BadgeSize
     , orientation : Orientation
+    , logo : Maybe String
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { badges = [], size = Standard, orientation = Landscape }, Cmd.none )
+    ( { badges = [], size = Standard, orientation = Landscape, logo = Nothing }, Cmd.none )
 
 
 
@@ -46,8 +47,7 @@ init _ =
 
 
 type Msg
-    = AddBadge
-    | UpdateNames String
+    = UpdateNames String
     | GotLogo File
     | LogoRead String
     | RequestPrint
@@ -91,18 +91,13 @@ update msg model =
         RequestPrint ->
             ( model, print () )
 
-        AddBadge ->
-            ( { model | badges = Badge.create "Nouveau" "Badge" Nothing :: model.badges }
-            , Cmd.none
-            )
-
         UpdateNames input ->
             let
                 parsedNames =
                     Parser.parseNames input
 
                 newBadges =
-                    List.map (\( first, last ) -> Badge.create first last Nothing) parsedNames
+                    List.map (\( first, last ) -> Badge.create first last model.logo) parsedNames
             in
             ( { model | badges = newBadges }
             , Cmd.none
@@ -121,7 +116,7 @@ update msg model =
                 newBadges =
                     List.map updateBadgeLogo model.badges
             in
-            ( { model | badges = newBadges }
+            ( { model | badges = newBadges, logo = Just content }
             , Cmd.none
             )
 

@@ -5351,7 +5351,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{badges: _List_Nil, orientation: $author$project$Main$Landscape, size: $author$project$Main$Standard},
+		{badges: _List_Nil, logo: $elm$core$Maybe$Nothing, orientation: $author$project$Main$Landscape, size: $author$project$Main$Standard},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5467,17 +5467,6 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					model,
 					$author$project$Main$print(_Utils_Tuple0));
-			case 'AddBadge':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							badges: A2(
-								$elm$core$List$cons,
-								A3($author$project$Data$Badge$create, 'Nouveau', 'Badge', $elm$core$Maybe$Nothing),
-								model.badges)
-						}),
-					$elm$core$Platform$Cmd$none);
 			case 'UpdateNames':
 				var input = msg.a;
 				var parsedNames = $author$project$Util$Parser$parseNames(input);
@@ -5486,7 +5475,7 @@ var $author$project$Main$update = F2(
 					function (_v3) {
 						var first = _v3.a;
 						var last = _v3.b;
-						return A3($author$project$Data$Badge$create, first, last, $elm$core$Maybe$Nothing);
+						return A3($author$project$Data$Badge$create, first, last, model.logo);
 					},
 					parsedNames);
 				return _Utils_Tuple2(
@@ -5515,11 +5504,13 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{badges: newBadges}),
+						{
+							badges: newBadges,
+							logo: $elm$core$Maybe$Just(content)
+						}),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
-var $author$project$Main$AddBadge = {$: 'AddBadge'};
 var $author$project$Main$GotLogo = function (a) {
 	return {$: 'GotLogo', a: a};
 };
@@ -5947,17 +5938,6 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										A2(
-										$elm$html$Html$button,
-										_List_fromArray(
-											[
-												$elm$html$Html$Events$onClick($author$project$Main$AddBadge),
-												$elm$html$Html$Attributes$class('bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Ajouter un badge')
-											])),
 										A2(
 										$elm$html$Html$button,
 										_List_fromArray(
