@@ -2,7 +2,7 @@
 
 Un générateur de badges professionnel, simple et élégant, conçu pour l'impression rapide. Entièrement développé en **Elm** avec **Tailwind CSS**.
 
-![Badge Print Preview](https://raw.githubusercontent.com/youen/badge-print/main/preview.png) *(Note: Remplacez par une vraie capture d'écran une fois publié)*
+![Badge Print Preview](https://raw.githubusercontent.com/youen/badge-print/main/preview.png)
 
 ## ✨ Fonctionnalités
 
