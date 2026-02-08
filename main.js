@@ -5623,6 +5623,7 @@ var $author$project$Main$ToggleTextBackground = {$: 'ToggleTextBackground'};
 var $author$project$Main$UpdateNames = function (a) {
 	return {$: 'UpdateNames', a: a};
 };
+var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -5652,6 +5653,12 @@ var $elm$file$File$decoder = _File_decoder;
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$Attributes$max = $elm$html$Html$Attributes$stringProperty('max');
@@ -5725,6 +5732,7 @@ var $author$project$Main$sizeToString = function (size) {
 var $elm$html$Html$Attributes$step = function (n) {
 	return A2($elm$html$Html$Attributes$stringProperty, 'step', n);
 };
+var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$textarea = _VirtualDom_node('textarea');
@@ -5899,14 +5907,45 @@ var $author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						A2(
-						$elm$html$Html$h1,
+						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('text-3xl font-bold mb-6')
+								$elm$html$Html$Attributes$class('flex justify-between items-center mb-6')
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Générateur de Badges')
+								A2(
+								$elm$html$Html$h1,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('text-3xl font-bold')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Générateur de Badges')
+									])),
+								A2(
+								$elm$html$Html$a,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$href('https://github.com/youen/badge-print'),
+										$elm$html$Html$Attributes$target('_blank'),
+										$elm$html$Html$Attributes$class('flex items-center gap-2 text-gray-400 hover:text-gray-600 transition-colors text-sm')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('w-5 h-5 flex items-center justify-center opacity-70')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('📁')
+											])),
+										$elm$html$Html$text('Voir sur GitHub')
+									]))
 							])),
 						A2(
 						$elm$html$Html$div,

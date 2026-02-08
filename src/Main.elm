@@ -3,8 +3,8 @@ port module Main exposing (..)
 import Browser
 import Data.Badge as Badge exposing (Badge)
 import File exposing (File)
-import Html exposing (Html, button, div, h1, input, label, option, select, text, textarea)
-import Html.Attributes exposing (accept, checked, class, name, placeholder, rows, type_, value)
+import Html exposing (Html, a, button, div, h1, input, label, option, select, text, textarea)
+import Html.Attributes exposing (accept, checked, class, href, name, placeholder, rows, target, type_, value)
 import Html.Events exposing (on, onClick, onInput)
 import Json.Decode as D
 import Task
@@ -188,7 +188,20 @@ view : Model -> Html Msg
 view model =
     div [ class "p-8 print:p-0" ]
         [ div [ class "print:hidden" ]
-            [ h1 [ class "text-3xl font-bold mb-6" ] [ text "Générateur de Badges" ]
+            [ div [ class "flex justify-between items-center mb-6" ]
+                [ h1 [ class "text-3xl font-bold" ] [ text "Générateur de Badges" ]
+                , a
+                    [ href "https://github.com/youen/badge-print"
+                    , target "_blank"
+                    , class "flex items-center gap-2 text-gray-400 hover:text-gray-600 transition-colors text-sm"
+                    ]
+                    [ div [ class "w-5 h-5 flex items-center justify-center opacity-70" ]
+                        [ -- Simple SVG icon for GitHub if possible, or just text
+                          text "📁"
+                        ]
+                    , text "Voir sur GitHub"
+                    ]
+                ]
             , div [ class "mb-6" ]
                 [ div [ class "mb-2 font-bold" ] [ text "1. Choisissez un logo" ]
                 , input
