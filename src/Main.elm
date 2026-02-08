@@ -39,6 +39,7 @@ type alias Model =
     , textBackground : Bool
     , rawInput : String
     , delimiter : String
+    , logoMargin : Float
     }
 
 
@@ -53,6 +54,7 @@ init _ =
       , textBackground = False
       , rawInput = ""
       , delimiter = " " -- Default space
+      , logoMargin = 16.0
       }
     , Cmd.none
     )
@@ -73,6 +75,7 @@ type Msg
     | SetLogoOpacity String
     | ToggleTextBackground
     | SetDelimiter String
+    | SetLogoMargin String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -91,6 +94,13 @@ update msg model =
                     String.toFloat str |> Maybe.withDefault model.logoOpacity
             in
             ( { model | logoOpacity = val }, Cmd.none )
+
+        SetLogoMargin str ->
+            let
+                val =
+                    String.toFloat str |> Maybe.withDefault model.logoMargin
+            in
+            ( { model | logoMargin = val }, Cmd.none )
 
         ToggleTextBackground ->
             ( { model | textBackground = not model.textBackground }, Cmd.none )
@@ -283,6 +293,21 @@ view model =
                             ]
                             []
                         ]
+                    , div [ class "mb-4" ]
+                        [ div [ class "flex justify-between mb-1" ]
+                            [ text "Marge du logo"
+                            , text (String.fromFloat model.logoMargin ++ "px")
+                            ]
+                        , input
+                            [ type_ "range"
+                            , Html.Attributes.min "0"
+                            , Html.Attributes.max "50"
+                            , value (String.fromFloat model.logoMargin)
+                            , onInput SetLogoMargin
+                            , class "w-full"
+                            ]
+                            []
+                        ]
                     , div [ class "flex items-center gap-2 mb-4" ]
                         [ input
                             [ type_ "checkbox"
@@ -365,8 +390,9 @@ viewBadge model badge =
         [ case badge.logo of
             Just src ->
                 div
-                    [ class "absolute inset-0 flex items-center justify-center p-4"
+                    [ class "absolute inset-0 flex items-center justify-center"
                     , Html.Attributes.style "opacity" (String.fromFloat model.logoOpacity)
+                    , Html.Attributes.style "padding" (String.fromFloat model.logoMargin ++ "px")
                     ]
                     [ Html.img [ Html.Attributes.src src, class "w-full h-full object-contain" ] [] ]
 

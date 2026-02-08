@@ -5351,7 +5351,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{badges: _List_Nil, delimiter: ' ', logo: $elm$core$Maybe$Nothing, logoOpacity: 0.1, orientation: $author$project$Main$Landscape, rawInput: '', size: $author$project$Main$Standard, textBackground: false, textY: 50.0},
+		{badges: _List_Nil, delimiter: ' ', logo: $elm$core$Maybe$Nothing, logoMargin: 16.0, logoOpacity: 0.1, orientation: $author$project$Main$Landscape, rawInput: '', size: $author$project$Main$Standard, textBackground: false, textY: 50.0},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5485,6 +5485,17 @@ var $author$project$Main$update = F2(
 						model,
 						{logoOpacity: val}),
 					$elm$core$Platform$Cmd$none);
+			case 'SetLogoMargin':
+				var str = msg.a;
+				var val = A2(
+					$elm$core$Maybe$withDefault,
+					model.logoMargin,
+					$elm$core$String$toFloat(str));
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{logoMargin: val}),
+					$elm$core$Platform$Cmd$none);
 			case 'ToggleTextBackground':
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -5594,6 +5605,9 @@ var $author$project$Main$GotLogo = function (a) {
 var $author$project$Main$RequestPrint = {$: 'RequestPrint'};
 var $author$project$Main$SetDelimiter = function (a) {
 	return {$: 'SetDelimiter', a: a};
+};
+var $author$project$Main$SetLogoMargin = function (a) {
+	return {$: 'SetLogoMargin', a: a};
 };
 var $author$project$Main$SetLogoOpacity = function (a) {
 	return {$: 'SetLogoOpacity', a: a};
@@ -5806,11 +5820,15 @@ var $author$project$Main$viewBadge = F2(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('absolute inset-0 flex items-center justify-center p-4'),
+									$elm$html$Html$Attributes$class('absolute inset-0 flex items-center justify-center'),
 									A2(
 									$elm$html$Html$Attributes$style,
 									'opacity',
-									$elm$core$String$fromFloat(model.logoOpacity))
+									$elm$core$String$fromFloat(model.logoOpacity)),
+									A2(
+									$elm$html$Html$Attributes$style,
+									'padding',
+									$elm$core$String$fromFloat(model.logoMargin) + 'px')
 								]),
 							_List_fromArray(
 								[
@@ -6215,6 +6233,40 @@ var $author$project$Main$view = function (model) {
 														$elm$html$Html$Attributes$value(
 														$elm$core$String$fromFloat(model.logoOpacity)),
 														$elm$html$Html$Events$onInput($author$project$Main$SetLogoOpacity),
+														$elm$html$Html$Attributes$class('w-full')
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('mb-4')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('flex justify-between mb-1')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Marge du logo'),
+														$elm$html$Html$text(
+														$elm$core$String$fromFloat(model.logoMargin) + 'px')
+													])),
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$type_('range'),
+														$elm$html$Html$Attributes$min('0'),
+														$elm$html$Html$Attributes$max('50'),
+														$elm$html$Html$Attributes$value(
+														$elm$core$String$fromFloat(model.logoMargin)),
+														$elm$html$Html$Events$onInput($author$project$Main$SetLogoMargin),
 														$elm$html$Html$Attributes$class('w-full')
 													]),
 												_List_Nil)
