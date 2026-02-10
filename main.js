@@ -5345,26 +5345,26 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$Landscape = {$: 'Landscape'};
+var $author$project$Main$Portrait = {$: 'Portrait'};
 var $author$project$Main$Standard = {$: 'Standard'};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{badges: _List_Nil, delimiter: ' ', logo: $elm$core$Maybe$Nothing, logoMargin: 16.0, logoOpacity: 0.1, orientation: $author$project$Main$Landscape, rawInput: '', size: $author$project$Main$Standard, textBackground: false, textY: 50.0},
+		{badges: _List_Nil, delimiter: ' ', fontSize: 19.0, logo: $elm$core$Maybe$Nothing, logoMargin: 25.0, logoOpacity: 1.0, logoY: 34.0, orientation: $author$project$Main$Portrait, rawInput: '', size: $author$project$Main$Standard, textBackground: false, textY: 80.0},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$A6 = {$: 'A6'};
+var $author$project$Main$Landscape = {$: 'Landscape'};
 var $author$project$Main$Large = {$: 'Large'};
 var $author$project$Main$LogoRead = function (a) {
 	return {$: 'LogoRead', a: a};
 };
-var $author$project$Main$Portrait = {$: 'Portrait'};
-var $author$project$Data$Badge$Badge = F3(
-	function (firstName, lastName, logo) {
-		return {firstName: firstName, lastName: lastName, logo: logo};
+var $author$project$Data$Badge$Badge = F5(
+	function (firstName, lastName, role, city, logo) {
+		return {city: city, firstName: firstName, lastName: lastName, logo: logo, role: role};
 	});
 var $author$project$Data$Badge$create = $author$project$Data$Badge$Badge;
 var $elm$core$Basics$not = _Basics_not;
@@ -5385,6 +5385,46 @@ var $elm$core$List$filter = F2(
 			list);
 	});
 var $elm$core$String$lines = _String_lines;
+var $elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
 var $elm$core$String$trim = _String_trim;
 var $elm$core$String$words = _String_words;
 var $author$project$Util$Parser$parseLine = F2(
@@ -5392,36 +5432,55 @@ var $author$project$Util$Parser$parseLine = F2(
 		if (delimiter === ' ') {
 			var parts = $elm$core$String$words(line);
 			if (!parts.b) {
-				return _Utils_Tuple2('', '');
+				return {city: $elm$core$Maybe$Nothing, firstName: '', lastName: '', role: $elm$core$Maybe$Nothing};
 			} else {
 				if (!parts.b.b) {
 					var firstName = parts.a;
-					return _Utils_Tuple2(firstName, '');
+					return {city: $elm$core$Maybe$Nothing, firstName: firstName, lastName: '', role: $elm$core$Maybe$Nothing};
 				} else {
 					var firstName = parts.a;
 					var rest = parts.b;
-					return _Utils_Tuple2(
-						firstName,
-						A2($elm$core$String$join, ' ', rest));
+					return {
+						city: $elm$core$Maybe$Nothing,
+						firstName: firstName,
+						lastName: A2($elm$core$String$join, ' ', rest),
+						role: $elm$core$Maybe$Nothing
+					};
 				}
 			}
 		} else {
 			var _v1 = A2($elm$core$String$split, delimiter, line);
 			if (!_v1.b) {
-				return _Utils_Tuple2('', '');
+				return {city: $elm$core$Maybe$Nothing, firstName: '', lastName: '', role: $elm$core$Maybe$Nothing};
 			} else {
 				if (!_v1.b.b) {
 					var firstName = _v1.a;
-					return _Utils_Tuple2(
-						$elm$core$String$trim(firstName),
-						'');
+					return {
+						city: $elm$core$Maybe$Nothing,
+						firstName: $elm$core$String$trim(firstName),
+						lastName: '',
+						role: $elm$core$Maybe$Nothing
+					};
 				} else {
 					var firstName = _v1.a;
-					var rest = _v1.b;
-					return _Utils_Tuple2(
-						$elm$core$String$trim(firstName),
-						$elm$core$String$trim(
-							A2($elm$core$String$join, delimiter, rest)));
+					var _v2 = _v1.b;
+					var lastName = _v2.a;
+					var rest = _v2.b;
+					var role = A2(
+						$elm$core$Maybe$map,
+						$elm$core$String$trim,
+						$elm$core$List$head(rest));
+					var city = A2(
+						$elm$core$Maybe$map,
+						$elm$core$String$trim,
+						$elm$core$List$head(
+							A2($elm$core$List$drop, 1, rest)));
+					return {
+						city: city,
+						firstName: $elm$core$String$trim(firstName),
+						lastName: $elm$core$String$trim(lastName),
+						role: role
+					};
 				}
 			}
 		}
@@ -5496,6 +5555,28 @@ var $author$project$Main$update = F2(
 						model,
 						{logoMargin: val}),
 					$elm$core$Platform$Cmd$none);
+			case 'SetFontSize':
+				var str = msg.a;
+				var val = A2(
+					$elm$core$Maybe$withDefault,
+					model.fontSize,
+					$elm$core$String$toFloat(str));
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{fontSize: val}),
+					$elm$core$Platform$Cmd$none);
+			case 'SetLogoY':
+				var str = msg.a;
+				var val = A2(
+					$elm$core$Maybe$withDefault,
+					model.logoY,
+					$elm$core$String$toFloat(str));
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{logoY: val}),
+					$elm$core$Platform$Cmd$none);
 			case 'ToggleTextBackground':
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -5544,10 +5625,8 @@ var $author$project$Main$update = F2(
 				var parsedNames = A2($author$project$Util$Parser$parseNames, model.delimiter, input);
 				var newBadges = A2(
 					$elm$core$List$map,
-					function (_v3) {
-						var first = _v3.a;
-						var last = _v3.b;
-						return A3($author$project$Data$Badge$create, first, last, model.logo);
+					function (p) {
+						return A5($author$project$Data$Badge$create, p.firstName, p.lastName, p.role, p.city, model.logo);
 					},
 					parsedNames);
 				return _Utils_Tuple2(
@@ -5560,10 +5639,8 @@ var $author$project$Main$update = F2(
 				var parsedNames = A2($author$project$Util$Parser$parseNames, newDelimiter, model.rawInput);
 				var newBadges = A2(
 					$elm$core$List$map,
-					function (_v4) {
-						var first = _v4.a;
-						var last = _v4.b;
-						return A3($author$project$Data$Badge$create, first, last, model.logo);
+					function (p) {
+						return A5($author$project$Data$Badge$create, p.firstName, p.lastName, p.role, p.city, model.logo);
 					},
 					parsedNames);
 				return _Utils_Tuple2(
@@ -5606,11 +5683,17 @@ var $author$project$Main$RequestPrint = {$: 'RequestPrint'};
 var $author$project$Main$SetDelimiter = function (a) {
 	return {$: 'SetDelimiter', a: a};
 };
+var $author$project$Main$SetFontSize = function (a) {
+	return {$: 'SetFontSize', a: a};
+};
 var $author$project$Main$SetLogoMargin = function (a) {
 	return {$: 'SetLogoMargin', a: a};
 };
 var $author$project$Main$SetLogoOpacity = function (a) {
 	return {$: 'SetLogoOpacity', a: a};
+};
+var $author$project$Main$SetLogoY = function (a) {
+	return {$: 'SetLogoY', a: a};
 };
 var $author$project$Main$SetSize = function (a) {
 	return {$: 'SetSize', a: a};
@@ -5836,7 +5919,11 @@ var $author$project$Main$viewBadge = F2(
 									A2(
 									$elm$html$Html$Attributes$style,
 									'padding',
-									$elm$core$String$fromFloat(model.logoMargin) + 'px')
+									$elm$core$String$fromFloat(model.logoMargin) + 'px'),
+									A2(
+									$elm$html$Html$Attributes$style,
+									'transform',
+									'translateY(' + ($elm$core$String$fromFloat(model.logoY - 50) + '%)'))
 								]),
 							_List_fromArray(
 								[
@@ -5869,7 +5956,11 @@ var $author$project$Main$viewBadge = F2(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('font-bold text-2xl leading-tight')
+									$elm$html$Html$Attributes$class('font-bold leading-tight'),
+									A2(
+									$elm$html$Html$Attributes$style,
+									'font-size',
+									$elm$core$String$fromFloat(model.fontSize) + 'px')
 								]),
 							_List_fromArray(
 								[
@@ -5879,12 +5970,60 @@ var $author$project$Main$viewBadge = F2(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$class('font-bold text-2xl uppercase leading-tight')
+									$elm$html$Html$Attributes$class('font-bold uppercase leading-tight'),
+									A2(
+									$elm$html$Html$Attributes$style,
+									'font-size',
+									$elm$core$String$fromFloat(model.fontSize) + 'px')
 								]),
 							_List_fromArray(
 								[
 									$elm$html$Html$text(badge.lastName)
-								]))
+								])),
+							function () {
+							var _v5 = badge.role;
+							if (_v5.$ === 'Just') {
+								var role = _v5.a;
+								return A2(
+									$elm$html$Html$div,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('italic mt-1'),
+											A2(
+											$elm$html$Html$Attributes$style,
+											'font-size',
+											$elm$core$String$fromFloat(model.fontSize * 0.6) + 'px')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text(role)
+										]));
+							} else {
+								return $elm$html$Html$text('');
+							}
+						}(),
+							function () {
+							var _v6 = badge.city;
+							if (_v6.$ === 'Just') {
+								var city = _v6.a;
+								return A2(
+									$elm$html$Html$div,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('font-medium mt-1'),
+											A2(
+											$elm$html$Html$Attributes$style,
+											'font-size',
+											$elm$core$String$fromFloat(model.fontSize * 0.6) + 'px')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text(city)
+										]));
+							} else {
+								return $elm$html$Html$text('');
+							}
+						}()
 						])),
 					$author$project$Main$cropMarks
 				]));
@@ -6083,7 +6222,7 @@ var $author$project$Main$view = function (model) {
 										$elm$html$Html$Events$onInput($author$project$Main$UpdateNames),
 										$elm$html$Html$Attributes$class('w-full p-2 border rounded'),
 										$elm$html$Html$Attributes$placeholder(
-										(model.delimiter === ' ') ? 'Collez la liste des noms ici (ex: Prénom Nom)' : 'Collez la liste des noms ici (ex: Prénom, Nom)'),
+										(model.delimiter === ' ') ? 'Collez la liste des noms ici (ex: Prénom Nom)' : 'Collez la liste des noms ici (ex: Prénom;Nom;Rôle;Ville)'),
 										$elm$html$Html$Attributes$rows(5),
 										$elm$html$Html$Attributes$value(model.rawInput)
 									]),
@@ -6292,6 +6431,40 @@ var $author$project$Main$view = function (model) {
 													]),
 												_List_fromArray(
 													[
+														$elm$html$Html$text('Position verticale du logo'),
+														$elm$html$Html$text(
+														$elm$core$String$fromFloat(model.logoY) + '%')
+													])),
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$type_('range'),
+														$elm$html$Html$Attributes$min('0'),
+														$elm$html$Html$Attributes$max('100'),
+														$elm$html$Html$Attributes$value(
+														$elm$core$String$fromFloat(model.logoY)),
+														$elm$html$Html$Events$onInput($author$project$Main$SetLogoY),
+														$elm$html$Html$Attributes$class('w-full')
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('mb-4')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('flex justify-between mb-1')
+													]),
+												_List_fromArray(
+													[
 														$elm$html$Html$text('Marge du logo'),
 														$elm$html$Html$text(
 														$elm$core$String$fromFloat(model.logoMargin) + 'px')
@@ -6306,6 +6479,40 @@ var $author$project$Main$view = function (model) {
 														$elm$html$Html$Attributes$value(
 														$elm$core$String$fromFloat(model.logoMargin)),
 														$elm$html$Html$Events$onInput($author$project$Main$SetLogoMargin),
+														$elm$html$Html$Attributes$class('w-full')
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('mb-4')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$class('flex justify-between mb-1')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Taille du texte'),
+														$elm$html$Html$text(
+														$elm$core$String$fromFloat(model.fontSize) + 'px')
+													])),
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$type_('range'),
+														$elm$html$Html$Attributes$min('10'),
+														$elm$html$Html$Attributes$max('60'),
+														$elm$html$Html$Attributes$value(
+														$elm$core$String$fromFloat(model.fontSize)),
+														$elm$html$Html$Events$onInput($author$project$Main$SetFontSize),
 														$elm$html$Html$Attributes$class('w-full')
 													]),
 												_List_Nil)
