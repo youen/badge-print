@@ -41,6 +41,7 @@ type alias Model =
     , delimiter : String
     , logoMargin : Float
     , fontSize : Float
+    , logoY : Float -- 0 to 100 percentage
     }
 
 
@@ -57,6 +58,7 @@ init _ =
       , delimiter = " " -- Default space
       , logoMargin = 16.0
       , fontSize = 24.0 -- Default font size
+      , logoY = 50.0 -- Default center
       }
     , Cmd.none
     )
@@ -79,6 +81,7 @@ type Msg
     | SetDelimiter String
     | SetLogoMargin String
     | SetFontSize String
+    | SetLogoY String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -111,6 +114,13 @@ update msg model =
                     String.toFloat str |> Maybe.withDefault model.fontSize
             in
             ( { model | fontSize = val }, Cmd.none )
+
+        SetLogoY str ->
+            let
+                val =
+                    String.toFloat str |> Maybe.withDefault model.logoY
+            in
+            ( { model | logoY = val }, Cmd.none )
 
         ToggleTextBackground ->
             ( { model | textBackground = not model.textBackground }, Cmd.none )
@@ -318,6 +328,21 @@ view model =
                         ]
                     , div [ class "mb-4" ]
                         [ div [ class "flex justify-between mb-1" ]
+                            [ text "Position verticale du logo"
+                            , text (String.fromFloat model.logoY ++ "%")
+                            ]
+                        , input
+                            [ type_ "range"
+                            , Html.Attributes.min "0"
+                            , Html.Attributes.max "100"
+                            , value (String.fromFloat model.logoY)
+                            , onInput SetLogoY
+                            , class "w-full"
+                            ]
+                            []
+                        ]
+                    , div [ class "mb-4" ]
+                        [ div [ class "flex justify-between mb-1" ]
                             [ text "Marge du logo"
                             , text (String.fromFloat model.logoMargin ++ "px")
                             ]
@@ -431,6 +456,7 @@ viewBadge model badge =
                     [ class "absolute inset-0 flex items-center justify-center"
                     , Html.Attributes.style "opacity" (String.fromFloat model.logoOpacity)
                     , Html.Attributes.style "padding" (String.fromFloat model.logoMargin ++ "px")
+                    , Html.Attributes.style "transform" ("translateY(" ++ String.fromFloat (model.logoY - 50) ++ "%)")
                     ]
                     [ Html.img [ Html.Attributes.src src, class "w-full h-full object-contain" ] [] ]
 

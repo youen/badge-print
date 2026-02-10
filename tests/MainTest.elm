@@ -32,4 +32,14 @@ suite =
                         update (SetFontSize "30") initialModel
                 in
                 Expect.equal newModel.fontSize 30.0
+        , test "SetLogoY should update the logo Y position in the model" <|
+            \_ ->
+                let
+                    ( initialModel, _ ) =
+                        init ()
+
+                    ( newModel, _ ) =
+                        update (SetLogoY "30") initialModel
+                in
+                Expect.equal newModel.logoY 30.0
         ]
