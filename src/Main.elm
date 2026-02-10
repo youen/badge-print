@@ -331,6 +331,21 @@ view model =
                             ]
                             []
                         ]
+                    , div [ class "mb-4" ]
+                        [ div [ class "flex justify-between mb-1" ]
+                            [ text "Taille du texte"
+                            , text (String.fromFloat model.fontSize ++ "px")
+                            ]
+                        , input
+                            [ type_ "range"
+                            , Html.Attributes.min "10"
+                            , Html.Attributes.max "60"
+                            , value (String.fromFloat model.fontSize)
+                            , onInput SetFontSize
+                            , class "w-full"
+                            ]
+                            []
+                        ]
                     , div [ class "flex items-center gap-2 mb-4" ]
                         [ input
                             [ type_ "checkbox"
@@ -425,8 +440,8 @@ viewBadge model badge =
             [ class ("z-10 relative flex flex-col items-center justify-center " ++ textBgClass)
             , Html.Attributes.style "top" (String.fromFloat (model.textY - 50) ++ "%")
             ]
-            [ div [ class "font-bold text-2xl leading-tight" ] [ text badge.firstName ]
-            , div [ class "font-bold text-2xl uppercase leading-tight" ] [ text badge.lastName ]
+            [ div [ class "font-bold leading-tight", Html.Attributes.style "font-size" (String.fromFloat model.fontSize ++ "px") ] [ text badge.firstName ]
+            , div [ class "font-bold uppercase leading-tight", Html.Attributes.style "font-size" (String.fromFloat model.fontSize ++ "px") ] [ text badge.lastName ]
             ]
         , cropMarks
         ]
