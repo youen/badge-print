@@ -40,6 +40,7 @@ type alias Model =
     , rawInput : String
     , delimiter : String
     , logoMargin : Float
+    , fontSize : Float
     }
 
 
@@ -55,6 +56,7 @@ init _ =
       , rawInput = ""
       , delimiter = " " -- Default space
       , logoMargin = 16.0
+      , fontSize = 24.0 -- Default font size
       }
     , Cmd.none
     )
@@ -76,6 +78,7 @@ type Msg
     | ToggleTextBackground
     | SetDelimiter String
     | SetLogoMargin String
+    | SetFontSize String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -101,6 +104,13 @@ update msg model =
                     String.toFloat str |> Maybe.withDefault model.logoMargin
             in
             ( { model | logoMargin = val }, Cmd.none )
+
+        SetFontSize str ->
+            let
+                val =
+                    String.toFloat str |> Maybe.withDefault model.fontSize
+            in
+            ( { model | fontSize = val }, Cmd.none )
 
         ToggleTextBackground ->
             ( { model | textBackground = not model.textBackground }, Cmd.none )
