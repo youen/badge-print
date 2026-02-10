@@ -470,13 +470,13 @@ viewBadge model badge =
             , div [ class "font-bold uppercase leading-tight", Html.Attributes.style "font-size" (String.fromFloat model.fontSize ++ "px") ] [ text badge.lastName ]
             , case badge.role of
                 Just role ->
-                    div [ class "italic text-sm mt-1" ] [ text role ]
+                    div [ class "italic mt-1", Html.Attributes.style "font-size" (String.fromFloat (model.fontSize * 0.6) ++ "px") ] [ text role ]
 
                 Nothing ->
                     text ""
             , case badge.city of
                 Just city ->
-                    div [ class "text-sm font-medium mt-1" ] [ text city ]
+                    div [ class "font-medium mt-1", Html.Attributes.style "font-size" (String.fromFloat (model.fontSize * 0.6) ++ "px") ] [ text city ]
 
                 Nothing ->
                     text ""
