@@ -154,7 +154,7 @@ update msg model =
                     Parser.parseNames model.delimiter input
 
                 newBadges =
-                    List.map (\( first, last ) -> Badge.create first last model.logo) parsedNames
+                    List.map (\p -> Badge.create p.firstName p.lastName p.role p.city model.logo) parsedNames
             in
             ( { model | badges = newBadges, rawInput = input }
             , Cmd.none
@@ -166,7 +166,7 @@ update msg model =
                     Parser.parseNames newDelimiter model.rawInput
 
                 newBadges =
-                    List.map (\( first, last ) -> Badge.create first last model.logo) parsedNames
+                    List.map (\p -> Badge.create p.firstName p.lastName p.role p.city model.logo) parsedNames
             in
             ( { model | delimiter = newDelimiter, badges = newBadges }
             , Cmd.none
@@ -246,7 +246,7 @@ view model =
                             "Collez la liste des noms ici (ex: Prénom Nom)"
 
                          else
-                            "Collez la liste des noms ici (ex: Prénom, Nom)"
+                            "Collez la liste des noms ici (ex: Prénom;Nom;Rôle;Ville)"
                         )
                     , rows 5
                     , value model.rawInput
@@ -442,6 +442,18 @@ viewBadge model badge =
             ]
             [ div [ class "font-bold leading-tight", Html.Attributes.style "font-size" (String.fromFloat model.fontSize ++ "px") ] [ text badge.firstName ]
             , div [ class "font-bold uppercase leading-tight", Html.Attributes.style "font-size" (String.fromFloat model.fontSize ++ "px") ] [ text badge.lastName ]
+            , case badge.role of
+                Just role ->
+                    div [ class "italic text-sm mt-1" ] [ text role ]
+
+                Nothing ->
+                    text ""
+            , case badge.city of
+                Just city ->
+                    div [ class "text-sm font-medium mt-1" ] [ text city ]
+
+                Nothing ->
+                    text ""
             ]
         , cropMarks
         ]

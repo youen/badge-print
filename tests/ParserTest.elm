@@ -13,26 +13,35 @@ suite =
             \_ ->
                 let
                     input =
-                        "John Doe"
+                        "John;Doe;Coach;Paris"
 
                     expected =
-                        [ "John" ]
+                        [ { firstName = "John", lastName = "Doe", role = Just "Coach", city = Just "Paris" } ]
 
-                    -- Simplification: just checking first name logic first or full structure?
-                    -- wait, the plan said parseNames : String -> List (String, String) or List Badge?
-                    -- Step 2 instructions: "transformact text en une liste de Badge"
-                    -- But let's verify generic parsing first or direct to Badge?
-                    -- Plan said: parseNames : String -> List (String, String)
-                    -- Let's stick to that for the Utility, then Main maps it to Badges.
                     parsed =
-                        Parser.parseNames " " input
+                        Parser.parseNames ";" input
                 in
-                Expect.equal parsed [ ( "John", "Doe" ) ]
-        , test "should parse multiple lines" <|
+                Expect.equal parsed expected
+        , test "should parse multiple lines with semicolon" <|
             \_ ->
                 let
                     input =
-                        "John Doe\nJane Smith"
+                        "John;Doe;Coach;Paris\nJane;Smith;Chaperon;Lyon"
+
+                    expected =
+                        [ { firstName = "John", lastName = "Doe", role = Just "Coach", city = Just "Paris" }
+                        , { firstName = "Jane", lastName = "Smith", role = Just "Chaperon", city = Just "Lyon" }
+                        ]
                 in
-                Expect.equal (Parser.parseNames " " input) [ ( "John", "Doe" ), ( "Jane", "Smith" ) ]
+                Expect.equal (Parser.parseNames ";" input) expected
+        , test "should parse space separated names as before (role and city will be Nothing)" <|
+            \_ ->
+                let
+                    input =
+                        "John Doe"
+
+                    expected =
+                        [ { firstName = "John", lastName = "Doe", role = Nothing, city = Nothing } ]
+                in
+                Expect.equal (Parser.parseNames " " input) expected
         ]
