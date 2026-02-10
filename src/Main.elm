@@ -49,16 +49,16 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( { badges = []
       , size = Standard
-      , orientation = Landscape
+      , orientation = Portrait
       , logo = Nothing
-      , textY = 50.0 -- Default center
-      , logoOpacity = 0.1 -- Default 10%
+      , textY = 80.0
+      , logoOpacity = 1.0 -- Default 10%
       , textBackground = False
       , rawInput = ""
       , delimiter = " " -- Default space
-      , logoMargin = 16.0
-      , fontSize = 24.0 -- Default font size
-      , logoY = 50.0 -- Default center
+      , logoMargin = 25.0
+      , fontSize = 19.0 -- Default font size
+      , logoY = 34.0 -- Default center
       }
     , Cmd.none
     )
