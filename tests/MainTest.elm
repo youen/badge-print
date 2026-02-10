@@ -42,4 +42,18 @@ suite =
                         update (SetLogoY "30") initialModel
                 in
                 Expect.equal newModel.logoY 30.0
+        , describe "Print Grid Logic"
+            [ test "Standard Portrait should have 3 columns" <|
+                \_ ->
+                    Main.printGridCols Main.Standard Main.Portrait
+                        |> Expect.equal 3
+            , test "Standard Landscape should have 2 columns" <|
+                \_ ->
+                    Main.printGridCols Main.Standard Main.Landscape
+                        |> Expect.equal 2
+            , test "A6 Portrait should have 1 column" <|
+                \_ ->
+                    Main.printGridCols Main.A6 Main.Portrait
+                        |> Expect.equal 1
+            ]
         ]

@@ -51,14 +51,14 @@ init _ =
       , size = Standard
       , orientation = Portrait
       , logo = Nothing
-      , textY = 80.0
+      , textY = 83.0
       , logoOpacity = 1.0 -- Default 10%
       , textBackground = False
       , rawInput = ""
       , delimiter = " " -- Default space
-      , logoMargin = 25.0
-      , fontSize = 19.0 -- Default font size
-      , logoY = 34.0 -- Default center
+      , logoMargin = 26.0
+      , fontSize = 17.0 -- Default font size
+      , logoY = 36.0 -- Default center
       }
     , Cmd.none
     )
@@ -392,9 +392,25 @@ view model =
                 ]
             ]
         , div
-            [ class "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 print:grid-cols-2 print:gap-0 print:w-[210mm] print:mx-auto" ]
+            [ class ("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 print:gap-0 print:w-[210mm] print:mx-auto " ++ printGridClass model) ]
             (List.map (viewBadge model) model.badges)
         ]
+
+
+printGridClass : Model -> String
+printGridClass model =
+    case printGridCols model.size model.orientation of
+        1 ->
+            "print:grid-cols-1"
+
+        2 ->
+            "print:grid-cols-2"
+
+        3 ->
+            "print:grid-cols-3"
+
+        _ ->
+            "print:grid-cols-2"
 
 
 sizeToString : BadgeSize -> String
@@ -408,6 +424,25 @@ sizeToString size =
 
         A6 ->
             "A6"
+
+
+printGridCols : BadgeSize -> Orientation -> Int
+printGridCols size orientation =
+    case ( size, orientation ) of
+        ( Standard, Portrait ) ->
+            3
+
+        ( Large, Portrait ) ->
+            3
+
+        ( A6, Portrait ) ->
+            1
+
+        ( A6, Landscape ) ->
+            2
+
+        _ ->
+            2
 
 
 viewBadge : Model -> Badge -> Html Msg

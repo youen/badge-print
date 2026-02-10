@@ -5351,7 +5351,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{badges: _List_Nil, delimiter: ' ', fontSize: 19.0, logo: $elm$core$Maybe$Nothing, logoMargin: 25.0, logoOpacity: 1.0, logoY: 34.0, orientation: $author$project$Main$Portrait, rawInput: '', size: $author$project$Main$Standard, textBackground: false, textY: 80.0},
+		{badges: _List_Nil, delimiter: ' ', fontSize: 17.0, logo: $elm$core$Maybe$Nothing, logoMargin: 26.0, logoOpacity: 1.0, logoY: 36.0, orientation: $author$project$Main$Portrait, rawInput: '', size: $author$project$Main$Standard, textBackground: false, textY: 83.0},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5794,6 +5794,47 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 };
 var $elm$html$Html$option = _VirtualDom_node('option');
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $author$project$Main$printGridCols = F2(
+	function (size, orientation) {
+		var _v0 = _Utils_Tuple2(size, orientation);
+		if (_v0.b.$ === 'Portrait') {
+			switch (_v0.a.$) {
+				case 'Standard':
+					var _v1 = _v0.a;
+					var _v2 = _v0.b;
+					return 3;
+				case 'Large':
+					var _v3 = _v0.a;
+					var _v4 = _v0.b;
+					return 3;
+				default:
+					var _v5 = _v0.a;
+					var _v6 = _v0.b;
+					return 1;
+			}
+		} else {
+			if (_v0.a.$ === 'A6') {
+				var _v7 = _v0.a;
+				var _v8 = _v0.b;
+				return 2;
+			} else {
+				return 2;
+			}
+		}
+	});
+var $author$project$Main$printGridClass = function (model) {
+	var _v0 = A2($author$project$Main$printGridCols, model.size, model.orientation);
+	switch (_v0) {
+		case 1:
+			return 'print:grid-cols-1';
+		case 2:
+			return 'print:grid-cols-2';
+		case 3:
+			return 'print:grid-cols-3';
+		default:
+			return 'print:grid-cols-2';
+	}
+};
 var $elm$core$Basics$round = _Basics_round;
 var $elm$html$Html$Attributes$rows = function (n) {
 	return A2(
@@ -6564,7 +6605,8 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 print:grid-cols-2 print:gap-0 print:w-[210mm] print:mx-auto')
+						$elm$html$Html$Attributes$class(
+						'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 print:gap-0 print:w-[210mm] print:mx-auto ' + $author$project$Main$printGridClass(model))
 					]),
 				A2(
 					$elm$core$List$map,
