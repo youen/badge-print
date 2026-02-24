@@ -5345,23 +5345,23 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
+var $author$project$Main$Large = {$: 'Large'};
 var $author$project$Main$Portrait = {$: 'Portrait'};
-var $author$project$Main$Standard = {$: 'Standard'};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{badges: _List_Nil, delimiter: ' ', fontSize: 17.0, logo: $elm$core$Maybe$Nothing, logoMargin: 26.0, logoOpacity: 1.0, logoY: 36.0, orientation: $author$project$Main$Portrait, rawInput: '', size: $author$project$Main$Standard, textBackground: false, textY: 83.0},
+		{badges: _List_Nil, delimiter: ';', fontSize: 15.0, logo: $elm$core$Maybe$Nothing, logoMargin: 33.0, logoOpacity: 1.0, logoY: 39.0, orientation: $author$project$Main$Portrait, rawInput: '', size: $author$project$Main$Large, textBackground: false, textY: 88.0},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$A6 = {$: 'A6'};
 var $author$project$Main$Landscape = {$: 'Landscape'};
-var $author$project$Main$Large = {$: 'Large'};
 var $author$project$Main$LogoRead = function (a) {
 	return {$: 'LogoRead', a: a};
 };
+var $author$project$Main$Standard = {$: 'Standard'};
 var $author$project$Data$Badge$Badge = F5(
 	function (firstName, lastName, role, city, logo) {
 		return {city: city, firstName: firstName, lastName: lastName, logo: logo, role: role};
@@ -5918,7 +5918,7 @@ var $author$project$Main$viewBadge = F2(
 				case 'Standard':
 					return _Utils_Tuple2('85mm', '55mm');
 				case 'Large':
-					return _Utils_Tuple2('90mm', '60mm');
+					return _Utils_Tuple2('95mm', '70mm');
 				default:
 					return _Utils_Tuple2('105mm', '148mm');
 			}
@@ -6029,11 +6029,11 @@ var $author$project$Main$viewBadge = F2(
 									$elm$html$Html$div,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$class('italic mt-1'),
+											$elm$html$Html$Attributes$class('italic'),
 											A2(
 											$elm$html$Html$Attributes$style,
 											'font-size',
-											$elm$core$String$fromFloat(model.fontSize * 0.6) + 'px')
+											$elm$core$String$fromFloat(model.fontSize * 0.9) + 'px')
 										]),
 									_List_fromArray(
 										[
@@ -6051,11 +6051,11 @@ var $author$project$Main$viewBadge = F2(
 									$elm$html$Html$div,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$class('font-medium mt-1'),
+											$elm$html$Html$Attributes$class('font-medium'),
 											A2(
 											$elm$html$Html$Attributes$style,
 											'font-size',
-											$elm$core$String$fromFloat(model.fontSize * 0.6) + 'px')
+											$elm$core$String$fromFloat(model.fontSize * 0.9) + 'px')
 										]),
 									_List_fromArray(
 										[
@@ -6311,21 +6311,21 @@ var $author$project$Main$view = function (model) {
 												$elm$html$Html$option,
 												_List_fromArray(
 													[
-														$elm$html$Html$Attributes$value('Standard')
-													]),
-												_List_fromArray(
-													[
-														$elm$html$Html$text('Standard (85x55mm)')
-													])),
-												A2(
-												$elm$html$Html$option,
-												_List_fromArray(
-													[
 														$elm$html$Html$Attributes$value('Large')
 													]),
 												_List_fromArray(
 													[
 														$elm$html$Html$text('Large (90x60mm)')
+													])),
+												A2(
+												$elm$html$Html$option,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$value('Standard')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Standard (85x55mm)')
 													])),
 												A2(
 												$elm$html$Html$option,
