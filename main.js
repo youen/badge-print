@@ -5351,7 +5351,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{badges: _List_Nil, delimiter: ';', fontSize: 15.0, logo: $elm$core$Maybe$Nothing, logoMargin: 33.0, logoOpacity: 1.0, logoY: 39.0, orientation: $author$project$Main$Portrait, rawInput: '', size: $author$project$Main$Large, textBackground: false, textY: 88.0},
+		{badges: _List_Nil, delimiter: ';', fontSize: 16.0, logo: $elm$core$Maybe$Nothing, logoMargin: 30.0, logoOpacity: 1.0, logoY: 41.0, orientation: $author$project$Main$Portrait, rawInput: '', size: $author$project$Main$Large, textBackground: false, textY: 90.0},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -6029,7 +6029,7 @@ var $author$project$Main$viewBadge = F2(
 									$elm$html$Html$div,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$class('italic'),
+											$elm$html$Html$Attributes$class('italic -mt-1'),
 											A2(
 											$elm$html$Html$Attributes$style,
 											'font-size',
@@ -6051,7 +6051,7 @@ var $author$project$Main$viewBadge = F2(
 									$elm$html$Html$div,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$class('font-medium'),
+											$elm$html$Html$Attributes$class('font-medium -mt-1'),
 											A2(
 											$elm$html$Html$Attributes$style,
 											'font-size',

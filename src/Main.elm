@@ -51,14 +51,14 @@ init _ =
       , size = Large
       , orientation = Portrait
       , logo = Nothing
-      , textY = 88.0
+      , textY = 90.0
       , logoOpacity = 1.0 -- Default 10%
       , textBackground = False
       , rawInput = ""
       , delimiter = ";" -- Default space
-      , logoMargin = 33.0
-      , fontSize = 15.0 -- Default font size
-      , logoY = 39.0 -- Default center
+      , logoMargin = 30.0
+      , fontSize = 16.0 -- Default font size
+      , logoY = 41.0 -- Default center
       }
     , Cmd.none
     )
@@ -505,13 +505,13 @@ viewBadge model badge =
             , div [ class "font-bold uppercase leading-tight", Html.Attributes.style "font-size" (String.fromFloat model.fontSize ++ "px") ] [ text badge.lastName ]
             , case badge.role of
                 Just role ->
-                    div [ class "italic", Html.Attributes.style "font-size" (String.fromFloat (model.fontSize * 0.9) ++ "px") ] [ text role ]
+                    div [ class "italic -mt-1", Html.Attributes.style "font-size" (String.fromFloat (model.fontSize * 0.9) ++ "px") ] [ text role ]
 
                 Nothing ->
                     text ""
             , case badge.city of
                 Just city ->
-                    div [ class "font-medium", Html.Attributes.style "font-size" (String.fromFloat (model.fontSize * 0.9) ++ "px") ] [ text city ]
+                    div [ class "font-medium -mt-1", Html.Attributes.style "font-size" (String.fromFloat (model.fontSize * 0.9) ++ "px") ] [ text city ]
 
                 Nothing ->
                     text ""

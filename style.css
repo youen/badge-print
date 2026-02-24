@@ -209,8 +209,8 @@
   .z-10 {
     z-index: 10;
   }
-  .mt-1 {
-    margin-top: calc(var(--spacing) * 1);
+  .-mt-1 {
+    margin-top: calc(var(--spacing) * -1);
   }
   .mb-1 {
     margin-bottom: calc(var(--spacing) * 1);
